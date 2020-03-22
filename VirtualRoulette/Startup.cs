@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VirtualRoulette.Filters;
 using VirtualRoulette.Persistence;
 using VirtualRoulette.Security;
 
@@ -26,7 +27,7 @@ namespace VirtualRoulette
             var authConfig = new AuthConfig();
             _configuration.GetSection("AuthConfig").Bind(authConfig);
 
-            services.AddTransient<IUsersRepository, UsersRepository>();
+            services.AddSingleton(typeof(IUsersRepository), new UsersRepository(_configuration["ConnectionString"]));
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<ISecurityService, SecurityService>();
 
@@ -49,7 +50,8 @@ namespace VirtualRoulette
                 };
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options => options.Filters.Add(typeof(CustomExceptionFilterAttribute)))
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

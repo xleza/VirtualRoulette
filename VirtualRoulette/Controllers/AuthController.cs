@@ -10,7 +10,6 @@ namespace VirtualRoulette.Controllers
     [Route("api/auth")]
     [ApiController]
     [Authorize]
-    //[ValidateModel]
     public sealed class AuthController : ControllerBase
     {
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using VirtualRoulette.Security;
 
 namespace VirtualRoulette.Controllers
 {
@@ -14,9 +15,9 @@ namespace VirtualRoulette.Controllers
     {
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<string>> Get([FromServices]ISecurityService securityService)
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { "value1", "value2", $"{securityService.CurrentUser.Username}" };
         }
 
         // GET api/values/5

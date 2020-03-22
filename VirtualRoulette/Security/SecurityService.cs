@@ -65,7 +65,7 @@ namespace VirtualRoulette.Security
 
         private Dictionary<string, Claim> GetClaims() //Used dictionary to access claim value by key in O(1) time complexity
         {
-            if (!_httpContext.User?.Identity.IsAuthenticated != true)
+            if (_httpContext.User?.Identity.IsAuthenticated != true)
                 return new Dictionary<string, Claim>();
 
             return _httpContext.User.Claims.ToDictionary(claim => claim.Type, claim => claim);
