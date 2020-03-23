@@ -5,7 +5,8 @@ namespace VirtualRoulette.Persistence
 {
     public interface IUsersRepository
     {
-        Task<User> Get(int id);
-        Task<User> Get(string username);
+        Task<User> GetAsync(int id, User.ControlFlags flags);
+        Task<User> GetAsync(string username, User.ControlFlags flags);
+        Task UpdateAsync(User user, int rowVersion);
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using VirtualRoulette.Filters;
 using VirtualRoulette.Persistence;
 using VirtualRoulette.Security;
+using VirtualRoulette.Services;
 
 namespace VirtualRoulette
 {
@@ -30,6 +31,7 @@ namespace VirtualRoulette
             services.AddSingleton(typeof(IUsersRepository), new UsersRepository(_configuration["ConnectionString"]));
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<ISecurityService, SecurityService>();
+            services.AddTransient<UsersCommandService>();
 
             services.AddAuthentication(options =>
             {

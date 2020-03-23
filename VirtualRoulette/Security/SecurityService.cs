@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using VirtualRoulette.Commands;
 using VirtualRoulette.Common;
+using VirtualRoulette.Domain;
 using VirtualRoulette.Exceptions;
 using VirtualRoulette.Persistence;
 
@@ -46,7 +47,7 @@ namespace VirtualRoulette.Security
 
         public async Task Authenticate(AuthenticateUser cmd)
         {
-            var user = await _usersRepository.Get(cmd.Username);
+            var user = await _usersRepository.GetAsync(cmd.Username, User.ControlFlags.Basic);
 
             if (user == null || !user.Password.Equals(Cryptography.EncryptPassword(cmd.Password)))
                 throw new BadRequestException("Username or password incorrect");
@@ -54,7 +55,7 @@ namespace VirtualRoulette.Security
             var claimsIdentity = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimKeys.Id, user.Id.ToString()),
-                new Claim(ClaimKeys.Username, user.Name)
+                new Claim(ClaimKeys.Username, user.Username)
             }, Constants.CookiesKey);
 
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);

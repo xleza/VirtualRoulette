@@ -12,6 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="ge.singular.roulette">
+      <HintPath>ge.singular.roulette.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
