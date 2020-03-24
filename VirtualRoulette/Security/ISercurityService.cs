@@ -7,6 +7,6 @@ namespace VirtualRoulette.Security
     {
         SecurityUser CurrentUser { get; }
 
-        Task Authenticate(AuthenticateUser cmd);
+        Task AuthenticateAsync(AuthenticateUser cmd);
     }
 }

@@ -32,6 +32,7 @@ namespace VirtualRoulette
 
             services.AddTransient<IDbHelper, MySqlDbHelper>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IHttpContext, HttpContextAdapter>();
             services.AddTransient<ISecurityService, SecurityService>();
             services.AddTransient<UsersCommandService>();
             services.AddHostedService<ConsumeScopedServiceHostedService>();

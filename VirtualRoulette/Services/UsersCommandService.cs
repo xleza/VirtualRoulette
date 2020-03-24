@@ -12,12 +12,12 @@ namespace VirtualRoulette.Services
 {
     public sealed class UsersCommandService
     {
-        private readonly IDbHelper _repository;
+        private readonly IDbHelper _dbHelper;
         private readonly ISecurityService _securityService;
 
-        public UsersCommandService(IDbHelper repository, ISecurityService securityService)
+        public UsersCommandService(IDbHelper dbHelper, ISecurityService securityService)
         {
-            _repository = repository;
+            _dbHelper = dbHelper;
             _securityService = securityService;
         }
 
@@ -27,14 +27,14 @@ namespace VirtualRoulette.Services
             if (!validationResult.getIsValid())
                 throw new BadRequestException(Constants.InvalidBetExceptionTest);
 
-            var user = await _repository.GetUserAsync(_securityService.CurrentUser.Id, User.ControlFlags.Basic | User.ControlFlags.Bets);
+            var user = await _dbHelper.GetUserAsync(_securityService.CurrentUser.Id, User.ControlFlags.Basic | User.ControlFlags.Bets);
             if (user.RowVersion != cmd.RowVersion)
                 throw new ConcurrencyException();
 
             var winningNumber = new Random().Next(0, 36);
             var (spinId, won, wonAmount) = user.MakeBat(cmd, CheckBets.EstimateWin, winningNumber, validationResult.getBetAmount(), ipAddress);
 
-            await _repository.UpdateUserAsync(user, cmd.RowVersion);
+            await _dbHelper.UpdateUserAsync(user, cmd.RowVersion);
 
             return new MakeBetResponseDto
             {

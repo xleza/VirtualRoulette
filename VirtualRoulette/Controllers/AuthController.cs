@@ -17,7 +17,7 @@ namespace VirtualRoulette.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody]AuthenticateUser cmd, [FromServices] ISecurityService service)
         {
-            await service.Authenticate(cmd);
+            await service.AuthenticateAsync(cmd);
 
             return NoContent();
         }

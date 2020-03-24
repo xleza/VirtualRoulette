@@ -25,7 +25,7 @@ namespace VirtualRoulette.Services
                 throw new ArgumentException($"Can't parse value of {nameof(Constants.JackpotCheckDelayInMillisecondsKey)}");
         }
 
-        public async Task IncrementJackpotAsync()
+        private async Task IncrementJackpotAsync()
         {
             var bet = await _dbHelper.GetUnProcessedBetAsync();
             if (bet == null)
