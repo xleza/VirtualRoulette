@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using VirtualRoulette.Commands;
 using VirtualRoulette.Exceptions;
 
@@ -11,7 +12,7 @@ namespace VirtualRoulette.Domain
         public (Guid spinId, bool won, decimal? wonAmount) MakeBat(MakeBet cmd, EstimateWin estimateWin, int winningNumber, long betAmount, string ipAddress)
         {
             if (betAmount > Balance)
-                throw new BadRequestException("Not enough balance");
+                throw new BadRequestException(Constants.NotEnoughBalanceExceptionText);
 
             var estWin = estimateWin(cmd.Bet, winningNumber);
             var won = estWin > 0;
@@ -20,12 +21,15 @@ namespace VirtualRoulette.Domain
 
             Balance = won ? Balance - betAmount + estWin : Balance - betAmount;
 
+            if (Bets == null)
+                Bets = new List<UserBet>();
+
             Bets.Add(new UserBet
             {
                 UserId = Id,
                 Bet = cmd.Bet,
                 Amount = betAmount,
-                WonAmount = won ? estWin : default(int?),
+                WonAmount = wonAmount,
                 SpinId = spinId,
                 Won = won,
                 WinningNumber = winningNumber,

@@ -50,7 +50,7 @@ namespace VirtualRoulette.Security
             var user = await _usersRepository.GetUserAsync(cmd.Username, User.ControlFlags.Basic);
 
             if (user == null || !user.Password.Equals(Cryptography.EncryptPassword(cmd.Password)))
-                throw new BadRequestException("Username or password incorrect");
+                throw new BadRequestException(Constants.InvalidUsernameOrPasswordExceptionText);
 
             var claimsIdentity = new ClaimsIdentity(new[]
             {

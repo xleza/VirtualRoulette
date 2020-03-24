@@ -25,7 +25,7 @@ namespace VirtualRoulette.Services
         {
             var validationResult = CheckBets.IsValid(cmd.Bet);
             if (!validationResult.getIsValid())
-                throw new BadRequestException("Invalid bet");
+                throw new BadRequestException(Constants.InvalidBetExceptionTest);
 
             var user = await _repository.GetUserAsync(_securityService.CurrentUser.Id, User.ControlFlags.Basic | User.ControlFlags.Bets);
             if (user.RowVersion != cmd.RowVersion)
