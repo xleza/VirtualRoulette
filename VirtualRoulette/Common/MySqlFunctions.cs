@@ -19,7 +19,7 @@ namespace VirtualRoulette.Common
         
         public static async Task ConnectAsync(string connectionString, Func<MySqlConnection, Task> f)
         {
-            using (var conn = new MySqlConnection(connectionString)) // Don't need extra try finally
+            using (var conn = new MySqlConnection(connectionString))
             {
                 await conn.OpenAsync();
                 await f(conn);

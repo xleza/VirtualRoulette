@@ -62,7 +62,7 @@ namespace VirtualRoulette.Persistence
 
                     transaction.Commit();
                 }
-                catch (Exception) // Rollback transaction and re throw exception with full stacktrace
+                catch (Exception) // Rollback transaction and rethrow exception with full stacktrace
                 {
                     transaction.Rollback();
                     throw;

@@ -7,7 +7,7 @@ namespace VirtualRoulette.Domain
 {
     public sealed partial class User
     {
-        public delegate int EstimateWin(string bet, int winingNumber); // using delegate to decouple domain logic to external lib and better testing
+        public delegate int EstimateWin(string bet, int winingNumber); // Using delegate to decouple domain logic to external lib and to test better
 
         public (Guid spinId, bool won, decimal? wonAmount) MakeBat(MakeBet cmd, EstimateWin estimateWin, int winningNumber, long betAmount, string ipAddress)
         {

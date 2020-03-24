@@ -22,6 +22,8 @@ namespace VirtualRoulette.Security
         }
 
         public SecurityService(IHttpContext httpContext, IDbHelper dbHelper)
+        //I have created IHttpContext and implemented it with HttpContextAdapter to decouple and hide extra functionality of HttpContext.
+        //Because of this, it is possible to mock this interface and test this service.
         {
             _httpContext = httpContext;
             _dbHelper = dbHelper;

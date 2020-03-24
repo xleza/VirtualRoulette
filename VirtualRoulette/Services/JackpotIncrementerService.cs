@@ -27,15 +27,15 @@ namespace VirtualRoulette.Services
 
         private async Task IncrementJackpotAsync()
         {
-            var bet = await _dbHelper.GetUnProcessedBetAsync();
+            var bet = await _dbHelper.GetUnProcessedBetAsync(); //Fetch the bet of which amount didn't affect a jackpot
             if (bet == null)
                 return;
 
             var jackPot = await _dbHelper.GetJackpotAsync();
 
-            var jackPotNewAmount = (jackPot?.Amount ?? 0) + bet.Amount / 100;
+            var jackPotNewAmount = (jackPot?.Amount ?? 0) + bet.Amount / 100; //Calculate jackpot amount
 
-            await _dbHelper.AddJackPotAsync(new Jackpot
+            await _dbHelper.AddJackPotAsync(new Jackpot  //I am using append-only approach to have track of changes and full history of jackpot entity
             {
                 SpinId = bet.SpinId,
                 Amount = jackPotNewAmount,
@@ -56,7 +56,7 @@ namespace VirtualRoulette.Services
             {
                 try
                 {
-                    using (var transactionScope = new TransactionScope())
+                    using (var transactionScope = new TransactionScope()) //This way code in the block participates in a transaction and we don't need to write extra transactions in inner scope
                     {
                         await IncrementJackpotAsync();
                         transactionScope.Complete();
