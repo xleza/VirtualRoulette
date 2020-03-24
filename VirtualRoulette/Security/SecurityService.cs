@@ -15,7 +15,7 @@ namespace VirtualRoulette.Security
     public sealed class SecurityService : ISecurityService
     {
         private readonly HttpContext _httpContext;
-        private readonly IUsersRepository _usersRepository;
+        private readonly IDbHelper _usersRepository;
 
         private static class ClaimKeys
         {
@@ -23,7 +23,7 @@ namespace VirtualRoulette.Security
             public const string Username = nameof(Username);
         }
 
-        public SecurityService(IHttpContextAccessor httpContext, IUsersRepository usersRepository)
+        public SecurityService(IHttpContextAccessor httpContext, IDbHelper usersRepository)
         {
             _httpContext = httpContext.HttpContext;
             _usersRepository = usersRepository;
@@ -47,7 +47,7 @@ namespace VirtualRoulette.Security
 
         public async Task Authenticate(AuthenticateUser cmd)
         {
-            var user = await _usersRepository.GetAsync(cmd.Username, User.ControlFlags.Basic);
+            var user = await _usersRepository.GetUserAsync(cmd.Username, User.ControlFlags.Basic);
 
             if (user == null || !user.Password.Equals(Cryptography.EncryptPassword(cmd.Password)))
                 throw new BadRequestException("Username or password incorrect");

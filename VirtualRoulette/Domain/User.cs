@@ -1,5 +1,4 @@
 ﻿using System;
-using ge.singular.roulette;
 using VirtualRoulette.Commands;
 using VirtualRoulette.Exceptions;
 
@@ -9,16 +8,15 @@ namespace VirtualRoulette.Domain
     {
         public delegate int EstimateWin(string bet, int winingNumber); // using delegate to decouple domain logic to external lib and better testing
 
-        public void MakeBat(MakeBet cmd, EstimateWin estimateWin, int winningNumber, long betAmount, string ipAddress)
+        public (Guid spinId, bool won, decimal? wonAmount) MakeBat(MakeBet cmd, EstimateWin estimateWin, int winningNumber, long betAmount, string ipAddress)
         {
             if (betAmount > Balance)
-                throw new BadRequestException("Not enough in balance");
+                throw new BadRequestException("Not enough balance");
 
             var estWin = estimateWin(cmd.Bet, winningNumber);
             var won = estWin > 0;
-
-            if (betAmount > Balance)
-                throw new BadRequestException("Not enough in balance");
+            var wonAmount = won ? estWin : default(int?);
+            var spinId = Guid.NewGuid();
 
             Balance = won ? Balance - betAmount + estWin : Balance - betAmount;
 
@@ -28,7 +26,7 @@ namespace VirtualRoulette.Domain
                 Bet = cmd.Bet,
                 Amount = betAmount,
                 WonAmount = won ? estWin : default(int?),
-                SpinId = Guid.NewGuid(),
+                SpinId = spinId,
                 Won = won,
                 WinningNumber = winningNumber,
                 IpAddress = ipAddress,
@@ -36,6 +34,8 @@ namespace VirtualRoulette.Domain
             });
 
             BetMade = true;
+
+            return (spinId, won, wonAmount);
         }
     }
 }

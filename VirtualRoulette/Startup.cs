@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VirtualRoulette.Common;
 using VirtualRoulette.Filters;
 using VirtualRoulette.Persistence;
 using VirtualRoulette.Security;
@@ -16,7 +17,7 @@ namespace VirtualRoulette
 {
     public class Startup
     {
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
         public Startup(IConfiguration configuration)
         {
@@ -28,10 +29,12 @@ namespace VirtualRoulette
             var authConfig = new AuthConfig();
             _configuration.GetSection("AuthConfig").Bind(authConfig);
 
-            services.AddSingleton(typeof(IUsersRepository), new UsersRepository(_configuration["ConnectionString"]));
+            services.AddTransient<IDbHelper, MySqlDbHelper>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<ISecurityService, SecurityService>();
             services.AddTransient<UsersCommandService>();
+            services.AddHostedService<ConsumeScopedServiceHostedService>();
+            services.AddScoped<IScopedProcessingService, JackpotIncrementerService>();
 
             services.AddAuthentication(options =>
             {

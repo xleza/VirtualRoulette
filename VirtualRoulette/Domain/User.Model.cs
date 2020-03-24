@@ -11,7 +11,7 @@ namespace VirtualRoulette.Domain
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public long Balance { get; set; }
+        public decimal Balance { get; set; }
         public int RowVersion { get; set; }
         public List<UserBet> Bets { get; set; }
         public DateTime? DateModified { get; set; }
